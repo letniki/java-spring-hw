@@ -1,0 +1,33 @@
+databaseChangeLog:
+  - changeSet:
+      id: "1.0.1"
+      author: "letniki"
+      changes:
+        - createSequence:
+            sequenceName: "cars_seq"
+        - createTable:
+            tableName: "cars"
+            columns:
+              - column:
+                  name: "id"
+                  type: "int"
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    defaultValueSequenceNext: "cars_seq"
+              - column:
+                  name: "model"
+                  type: "text"
+              - column:
+                  name: "engine_power"
+                  type: "int"
+  - changeSet:
+      id: "1.0.2"
+      author: "letniki"
+      changes:
+        - addColumn:
+            tableName: "cars"
+            columns:
+              - column:
+                  name: "torque"
+                  type: int
