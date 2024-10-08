@@ -1,14 +1,11 @@
 package org.example.javaspring.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+@Data
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,4 +18,7 @@ public class Car {
     private String model;
     private int enginePower;
     private int torque;
+
+    @Column(name = "fuel_type")
+    private String fuelType;
 }

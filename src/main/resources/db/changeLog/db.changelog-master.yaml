@@ -31,3 +31,13 @@ databaseChangeLog:
               - column:
                   name: "torque"
                   type: int
+  - changeSet:
+      id: "1.0.3"
+      author: "letniki"
+      changes:
+        - addColumn:
+            tableName: "cars"
+            columns:
+              - column:
+                  name: "fuel_type"
+                  type: "text"
