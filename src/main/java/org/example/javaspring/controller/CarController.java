@@ -3,6 +3,7 @@ package org.example.javaspring.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.javaspring.dto.CarDTO;
+import org.example.javaspring.dto.ReviewDTO;
 import org.example.javaspring.service.CarService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,5 +37,12 @@ public class CarController {
     public void deleteCar(@PathVariable int id){
         carService.deleteById(id);
     }
-
+    @PostMapping("/cars/{id}/reviews")
+    public ResponseEntity<ReviewDTO> createReview(@PathVariable(name="id") Integer carId, @RequestBody ReviewDTO reviewDTO){
+        return ResponseEntity.ok(carService.createReview(carId, reviewDTO));
+    }
+    @GetMapping("cars/{carId}/reviews")
+    public ResponseEntity<List<ReviewDTO>> getReviews(@PathVariable Integer carId){
+       return ResponseEntity.ok(this.carService.findAllReviewsForCar(carId));
+    }
 }

@@ -14,3 +14,18 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  data:
+    mongodb:
+      uri: mongodb+srv://letniki:admin@cluster0.y379y.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      database: products-db
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${mail-sender}
+    password: ${mail-password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
