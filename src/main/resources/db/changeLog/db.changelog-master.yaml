@@ -30,7 +30,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: "torque"
-                  type: int
+                  type: "int"
   - changeSet:
       id: "1.0.3"
       author: "letniki"
@@ -41,3 +41,31 @@ databaseChangeLog:
               - column:
                   name: "fuel_type"
                   type: "text"
+  - changeSet:
+      id: "1.0.10"
+      author: "letniki"
+      changes:
+        - createTable:
+            tableName: "users"
+            columns:
+              - column:
+                  name: "id"
+                  type: "bigint"
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    unique: true
+              - column:
+                  name: "username"
+                  type: "varchar(255)"
+                  constraints:
+                    unique: true
+              - column:
+                  name: "password"
+                  type: "varchar(255)"
+              - column:
+                  name: "role"
+                  type: "varchar(255)"
+              - column:
+                  name: "registered_at"
+                  type: "timestamp"
