@@ -6,6 +6,7 @@ import org.example.javaspring.dto.CarDTO;
 import org.example.javaspring.dto.ReviewDTO;
 import org.example.javaspring.service.CarService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +26,8 @@ public class CarController {
     ){
      return ResponseEntity.ok(carService.getCars(minEnginePower, maxEnginePower));
     }
+
+    @Secured("SELLER")
     @PostMapping("/cars")
     public ResponseEntity<CarDTO> createCar(@RequestBody @Valid CarDTO car){
         return ResponseEntity.ok(carService.createCar(car));
