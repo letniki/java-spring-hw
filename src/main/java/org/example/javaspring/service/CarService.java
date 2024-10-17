@@ -1,7 +1,8 @@
 package org.example.javaspring.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.example.javaspring.dto.CarDTO;
+import org.example.javaspring.api.dto.CarDto;
 import org.example.javaspring.dto.ReviewDTO;
 import org.example.javaspring.entity.Car;
 import org.example.javaspring.entity.Review;
@@ -19,45 +20,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CarService {
     private final CarRepository carRepository;
-    private final CarMapper carMapper;
     private final ReviewRopository reviewRopository;
     private final ReviewMapper reviewMapper;
-    public List<CarDTO> getCars(Integer minEnginePower, Integer maxEnginePower){
-        List<Car> cars;
-        if(minEnginePower !=null && maxEnginePower !=null){
-            cars = carRepository.findAllByEnginePowerBetween(minEnginePower, maxEnginePower);
-        }else if(minEnginePower !=null){
-            cars = carRepository.findAllByEnginePowerGreaterThan(minEnginePower);
-        } else if (maxEnginePower != null) {
-            cars = carRepository.findAllByEnginePowerLessThan(maxEnginePower);
-        }else{
-            cars = carRepository.findAll();
-        }
-        return cars.stream().map(carMapper::mapToDTO).toList();
-    }
-    public Optional<CarDTO> getCar(Integer id){
-        return carRepository.findById(id).map(carMapper::mapToDTO);
-    }
-    public CarDTO createCar(CarDTO carDTO){
-        Car car = carMapper.mapToEntity(carDTO);
-        Car savedCar = carRepository.save(car);
-        return carMapper.mapToDTO(savedCar);
-    }
-    public Optional<CarDTO> updateCar(Integer id, CarDTO carDTO){
-        return carRepository
-                .findById(id)
-                .map(car -> {
-                    car.setModel(carDTO.getModel());
-                    car.setEnginePower(carDTO.getEnginePower());
-                    car.setTorque(carDTO.getTorque());
-                    car.setFuelType(carDTO.getFuelType());
-                    Car savedCar = carRepository.save(car);
-                    return carMapper.mapToDTO(savedCar);
-                });
-    }
-    public void deleteById(Integer id){
-        carRepository.deleteById(id);
-    }
+    private final CarMapper carMapper;
 
     public ReviewDTO createReview(Integer carId, ReviewDTO reviewDTO) {
         if(!this.carRepository.existsById(carId)){
@@ -80,5 +45,35 @@ public class CarService {
                 .stream()
                 .map(this.reviewMapper::mapToDto)
                 .toList();
+    }
+    public CarDto createCar(CarDto carDto){
+        if(carDto.getId() != null){
+            throw new IllegalArgumentException("Car can not be created with predefined id");
+        }
+        Car car = this.carMapper.mapToEntity(carDto);
+        Car savedCar = carRepository.save(car);
+        return this.carMapper.mapToDto(savedCar);
+    }
+
+    public void deleteCar(Integer carId){
+        if(!this.carRepository.existsById(carId)){
+            throw new IllegalArgumentException("Car with id " + carId + " does not exist");
+        }
+        this.carRepository.deleteById(carId);
+    }
+    public Optional<CarDto> findCar(Integer carId){
+        return carRepository.findById(carId).map(carMapper::mapToDto);
+    }
+    public List<CarDto> getCars(){
+        return this.carRepository.findAll()
+                .stream()
+                .map(carMapper::mapToDto)
+                .toList();
+    }
+    @Transactional
+    public Optional<CarDto> updateCar(Integer carId, CarDto carDtoUpdateWith){
+       return carRepository.findById(carId)
+               .map(existingCar ->carMapper.updateEntity(existingCar, carDtoUpdateWith))
+               .map(carMapper::mapToDto);
     }
 }

@@ -22,7 +22,7 @@ public class SecurityConfig {
         return http
                 .csrf(CsrfConfigurer::disable)
                 .cors(CorsConfigurer::disable)
-                .authorizeHttpRequests(request -> request.requestMatchers("/error").permitAll()
+                .authorizeHttpRequests(request -> request.requestMatchers("/error", "swagger-ui/**", "v3/api-docs/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer(oauth2 ->oauth2.jwt(jwt ->jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))

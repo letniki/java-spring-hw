@@ -1,0 +1,170 @@
+openapi: 3.0.3
+
+info:
+  title: Car Service API
+  description: |-
+    OpenAPI specification example based on Car model
+  version: 0.0.1
+servers:
+  - url: "http://localhost:8080/api/v1"
+
+tags:
+  - name: car
+paths:
+  "/cars":
+    get:
+      security:
+        - BearerAuth: []
+      tags:
+        - car
+      summary: "Get all cars"
+      description: "Fetch all existing cars"
+      operationId: getCars
+      responses:
+        '200':
+          $ref: "#/components/responses/CarList"
+    post:
+      security:
+        - BearerAuth: []
+      tags:
+        - car
+      summary: "Create car"
+      operationId: createCar
+      requestBody:
+        $ref: "#/components/requestBodies/Car"
+      responses:
+        '201':
+          $ref: "#/components/responses/Car"
+        '400':
+          description: Invalid request
+        '422':
+          description: Validation exception
+  "/cars/{id}":
+    get:
+      security:
+        - BearerAuth: []
+      tags:
+        - car
+      summary: "Get specific car"
+      description: "get car by id"
+      operationId: getCar
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: "integer"
+            format: "int32"
+      responses:
+        "200":
+          $ref: "#/components/responses/Car"
+        "400":
+          description: Invalid request
+    put:
+      security:
+        - BearerAuth: []
+      tags:
+        - car
+      summary: "Modify specific car"
+      description: "update car"
+      operationId: "modifyCar"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int32
+          description: "Car ID"
+      requestBody:
+        $ref: "#/components/requestBodies/Car"
+      responses:
+        '201':
+          $ref: "#/components/responses/Car"
+        '400':
+          description: Invalid request
+        '422':
+          description: Validation exception
+    delete:
+      security:
+        - BearerAuth: []
+      tags:
+        - car
+      summary: "Delete car"
+      operationId: "deleteCar"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '204':
+          description: Car deleted
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Car:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          readOnly: true
+          example: 10
+        model:
+          type: string
+          example: "Tesla"
+        enginePower:
+          type: integer
+          format: int32
+          example: 400
+        torque:
+          type: integer
+          format: int32
+          example: 250
+        fuelType:
+          type: string
+          example: "electro"
+    ReviewDTO:
+      type: object
+      properties:
+        rating:
+          type: integer
+          format: int32
+        text:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+
+
+  responses:
+    Car:
+      description: Car
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Car'
+    CarList:
+      description: Car list
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Car'
+  requestBodies:
+    Car:
+      description: Car to be created
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Car'
